@@ -1,0 +1,42 @@
+---
+# tasks file for nginx_php_fpm
+- name: Install Nginx
+  apt:
+    name: nginx
+    state: latest
+
+- name: Start Nginx and Enable it on the every boot
+  service:
+    name: nginx
+    state: started
+    enabled: yes
+
+- name: Install PHP-FPM
+  apt:
+    name: php8.1-fpm
+    state: latest
+
+- name: Start php and Enable it on the every boot
+  service:
+    name: php8.1-fpm
+    state: started
+    enabled: yes
+
+- name: create document root directory
+  file:
+    path: '{{ document_root_path }}'
+    state: directory
+
+- name: add page
+  copy:
+    src: index.php
+    dest: '{{ document_root_path }}'
+
+
+- name: add new config
+  template:
+    src: conf1.j2
+    dest: /etc/nginx/conf.d/conf1.conf
+  notify:
+  - Restart nginx
+
