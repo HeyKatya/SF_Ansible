@@ -1,0 +1,25 @@
+---
+- name: install docker
+  hosts: localhost
+
+  tasks:
+  - name: installing a few prerequisite packages which let apt use packages over HTTPS
+    apt:
+      name: apt-transport-https,ca-certificates,curl,software-properties-common
+      state: latest
+      update_cache: yes
+  - name: adding the GPG key for the official Docker repository to your system
+    apt_key:
+      url: https://download.docker.com/linux/ubuntu/gpg
+      state: present
+  - name: adding the Docker repository to APT sources
+    apt_repository:
+      repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable
+  - name: installing and starting the daemon Docker
+    apt:
+      name: docker-ce
+  - name: Start docker
+    service:
+      name: docker
+      state: started
+      enabled: yes

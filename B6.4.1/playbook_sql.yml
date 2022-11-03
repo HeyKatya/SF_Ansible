@@ -1,0 +1,16 @@
+---
+- name: install mysql server
+  hosts: localhost
+
+  tasks:
+  - name: installion
+    apt:
+      name: mysql-server,mysql-client
+      state: latest
+      update_cache: yes
+
+  - name: start
+    service:
+      name: mysql
+      state: started
+      enabled: yes
