@@ -1,0 +1,36 @@
+---
+# tasks file for DNS_server
+- name: disable systemd-resolv
+  command: 'systemctl disable systemd-resolved'
+
+- name: stop systemd
+  command: 'systemctl stop systemd-resolved'
+
+- name: delete resolv config
+  file:
+    path: /etc/resolv.conf
+    state: absent
+
+- name: create new config
+  copy:
+    dest: /etc/resolv.conf
+    content: 'nameserver 8.8.8.8'
+
+- name: install
+  apt:
+    name: dnsmasq
+    state: latest
+
+- name: set up DNS config
+  copy:
+    src: dnsmasq.conf
+    dest: /etc/dnsmasq.conf
+  notify:
+  - Restart dnsmasq
+
+- name: Add DNS records to the file
+  blockinfile:
+    dest: /etc/hosts
+    block: "{{ lookup('file', 'records') }}"
+  notify:
+  - Restart dnsmasq

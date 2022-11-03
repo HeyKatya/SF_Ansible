@@ -1,0 +1,36 @@
+---
+- name: create users with sudo rights
+  hosts: test
+  become: yes
+  vars:
+      user_name_1: user2
+      user_name_2: user3
+      group_name: superusers
+      test_user_password: 1234
+
+  tasks:
+  - name: create group
+    group:
+      name: "{{ group_name }}"
+
+  - name: create and add users to group
+    user:
+      name: {{ user_name_1 }}
+      group: {{ group_name }}
+      password: "{{ test_user_password | password_hash('sha512') }}"
+      append: yes
+
+  - name: create and add users to group
+    user:
+      name: {{ user_name_2 }}
+      group: {{ group_name }}
+      password: "{{ test_user_password | password_hash('sha512') }}"
+      append: yes
+
+  - name: add sudo group
+    lineinfile:
+      path: /etc/sudoers
+      state: present
+      line: '%superusers ALL=(ALL) ALL'
+      validate: /usr/sbin/visudo -cf %s
+

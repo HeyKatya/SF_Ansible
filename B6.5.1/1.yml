@@ -9,11 +9,11 @@
   - name: Create user
     user:
       password: "{{ test_user_password | password_hash('sha512') }}"
-      name: {{ user_name }}
+      name: "{{ user_name }}"
       generate_ssh_key: true
 
   - name: Set authorized key taken from file
     ansible.posix.authorized_key:
-      user: {{ user_name }}
+      user: "{{ user_name }}"
       state: present
       key: "{{ lookup('file', './id_rsa.pub') }}"

@@ -1,0 +1,7 @@
+---
+- hosts: test
+  gather_facts: no
+  become: yes
+
+  roles:
+  - DNS_server
