@@ -1,0 +1,7 @@
+---
+- hosts: test
+  gather_facts: no
+  become: yes
+
+  roles:
+   - FTP_server_vsftpd
