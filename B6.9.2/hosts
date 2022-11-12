@@ -1,2 +1,2 @@
 [test]
-vm1 ansible_host=51.250.79.148
+vm1 ansible_host=84.252.128.56
